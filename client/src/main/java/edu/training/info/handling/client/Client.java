@@ -1,16 +1,16 @@
 package edu.training.info.handling.client;
 
-import edu.training.info.handling.domain.bean.User;
-import edu.training.info.handling.service.ServiceFactory;
+import edu.training.info.handling.domain.bean.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 public class Client implements Runnable {
+    private static Logger logger = LoggerFactory.getLogger(Client.class);
     private String host;
     private int port;
 
@@ -26,7 +26,7 @@ public class Client implements Runnable {
         try {
             thread.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -34,17 +34,17 @@ public class Client implements Runnable {
     public void run() {
         try (Socket hostSocket = new Socket(host, port);
              ObjectOutputStream out = new ObjectOutputStream(hostSocket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(hostSocket.getInputStream());
-             Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8)) {
-
-            String string = scanner.next();
-            while (!string.equals("quite")) {
-                User user = new User(1, string);
-                out.writeObject(user);
-                string = scanner.next();
+             ObjectInputStream in = new ObjectInputStream(hostSocket.getInputStream())) {
+            String help = (String) in.readObject();
+            System.out.println(help);
+            String string;
+            while ((string = System.console().readLine()) != null) {
+                out.writeObject(string);
+                Text text = (Text) in.readObject();
+                System.out.println(text.view());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | ClassNotFoundException e) {
+            logger.error(e.getMessage());
         }
     }
 }

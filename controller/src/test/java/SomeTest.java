@@ -11,7 +11,7 @@ public class SomeTest {
         Properties properties = new Properties();
         Configuration configuration;
         try {
-            properties.load(getClass().getResourceAsStream("some.properties"));
+            properties.load(getClass().getResourceAsStream("help.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }

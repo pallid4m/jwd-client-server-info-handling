@@ -1,19 +1,13 @@
 package edu.training.info.handling.data.dao;
 
-import edu.training.info.handling.data.dao.impl.UserDAOImpl;
 import edu.training.info.handling.data.dao.impl.TextDAOImpl;
 
 public final class DAOFactory {
     private static final DAOFactory instance = new DAOFactory();
 
-    private final UserDAO userDAO = new UserDAOImpl();
     private final TextDAO textDAO = new TextDAOImpl();
 
     private DAOFactory() {}
-
-    public UserDAO getUserDAO() {
-        return userDAO;
-    }
 
     public TextDAO getTextDAO() {
         return textDAO;
